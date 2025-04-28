@@ -14,7 +14,7 @@ import java.util.Objects;
 public class HibernateUtil {
     private static final Map<String, Object> SETTINGS=Map.ofEntries(
             Map.entry(Environment.DRIVER,"org.postgresql.Driver"),
-        Map.entry(Environment.URL, "jdbc:postgresql://localhost:5432/postgres"),
+        Map.entry(Environment.URL, "jdbc:postgresql://localhost:5432/crud"),
         Map.entry(Environment.USER,"postgres"),
         Map.entry(Environment.PASS,"brasil9"),
         Map.entry(Environment.DIALECT,"org.hibernate.dialect.PostgreSQLDialect"),
@@ -32,7 +32,8 @@ public class HibernateUtil {
                     .build();
 
             Metadata metadata=new MetadataSources(serviceRegistry)
-                    .addAnnotatedClass(Employee.class)
+                    .addAnnotatedClass(Customer.class)
+                    .addAnnotatedClass(Address.class)
                     .getMetadataBuilder()
                     .build();
             return metadata.getSessionFactoryBuilder().build();
