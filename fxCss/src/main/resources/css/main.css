@@ -1,0 +1,20 @@
+.button {
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 15px;
+    -fx-background-color:#ffffff;
+}
+
+ .root .yellowButton:hover{
+ -fx-background-color:yellow;
+ }
+.root .text-area .scroll-pane:fitToWidth:fitToHeight .viewport .content{
+-fx-background-color:#000000;
+}
+ .root .text-area{
+ -fx-text-fill:#ffffff;
+ -fx-font-size:20px;
+ }
+
+.root .blueButton:hover{
+-fx-background-color:blue;
+}
