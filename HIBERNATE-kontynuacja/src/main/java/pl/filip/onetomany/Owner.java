@@ -6,6 +6,7 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -32,7 +33,8 @@ public class Owner  {
     private String email;
 
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "owner", cascade = CascadeType.ALL)
-    private Set<Pet> pets;
+    @OrderBy("breed ASC")
+    private List<Pet> pets;
 
     public void removePet(final Pet pet){
        pets.remove(pet);
