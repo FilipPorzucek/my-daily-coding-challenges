@@ -6,6 +6,7 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -41,6 +42,6 @@ public class Pet {
             inverseJoinColumns = {@JoinColumn(name = "toy_id")}
     )
     @Fetch(value = FetchMode.JOIN)
-    private Set<Toy> toys;
+    private List<Toy> toys;
 
 }

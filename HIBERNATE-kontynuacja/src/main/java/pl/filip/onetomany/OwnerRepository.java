@@ -18,7 +18,7 @@ public class OwnerRepository {
             }
             System.out.println("###BEFORET INSERT\n---------------------------------------------------");
             session.beginTransaction();
-            owner.setPets(pets);
+            owner.setPets(new ArrayList<>(pets));
             pets.forEach(pet -> pet.setOwner(owner));
             session.persist(owner);
             pets.forEach(session::persist);
@@ -327,7 +327,7 @@ public class OwnerRepository {
         }
     }
 
-  /*  void saveTestData(){
+    int saveTestData(){
         try (Session session=HibernateUtil.getSession()){
             if(Objects.isNull(session)){
                 throw new RuntimeException("Session is null");
@@ -348,15 +348,15 @@ public class OwnerRepository {
             Pet pet3 = ExampleData.somePet3();
             Pet pet4 = ExampleData.somePet4();
 
-            pet1.setToys(Set.of(toy1,toy2));
-            pet2.setToys(Set.of(toy2,toy3));
-            pet3.setToys(Set.of(toy1,toy2,toy3));
-            pet4.setToys(Set.of(toy2,toy3,toy4));
+            pet1.setToys(List.of(toy1,toy2));
+            pet2.setToys(List.of(toy2,toy3));
+            pet3.setToys(List.of(toy1,toy2,toy3));
+            pet4.setToys(List.of(toy2,toy3,toy4));
 
             Owner owner1=ExampleData.someOwner();
             Owner owner2=ExampleData.someOwner2();
-            owner1.setPets(Set.of(pet1,pet2));
-            owner2.setPets(Set.of(pet3,pet4));
+            owner1.setPets(List.of());
+            owner2.setPets(List.of(pet3,pet4));
 
             owner1.getPets().forEach(pet-> pet.setOwner(owner1));
             owner2.getPets().forEach(pet -> pet.setOwner(owner2));
@@ -365,9 +365,9 @@ public class OwnerRepository {
             session.persist(owner2);
             session.getTransaction().commit();
 
-
+        return owner1.getId();
         }
-    }*/
+    }
 
     void selectExample8() {
         try (Session session = HibernateUtil.getSession()) {
@@ -395,8 +395,7 @@ public class OwnerRepository {
             }
             session.beginTransaction();
             String select9 = "SELECT new pl.filip.onetomany.ToyStat(" +
-                    "MAX(t.what),SUM(t.id)/COUNT (t.id))FROM Toy t"
-                     ;
+                    "MAX(t.what),SUM(t.id)/COUNT (t.id))FROM Toy t";
             session.createQuery(select9, ToyStat.class)
                     .getResultList()
                     .forEach(entity -> System.out.println("###ENTITY" + entity));
@@ -407,31 +406,33 @@ public class OwnerRepository {
         }
     }
 
-    void selectExampleN1(){
-       try(Session session=HibernateUtil.getSession()) {
-           if(Objects.isNull(session)){
-               throw new RuntimeException("Session is null");
-           }
-           session.beginTransaction();
-
-           String hql="SELECT ow FROM Owner ow ";
-           session.createQuery(hql,Owner.class)
-                   .getResultList()
-                   .forEach(entity-> System.out.println(entity));
-           session.getTransaction().commit();
-       }
-    }
-
-    void manipulateData(){
-        try(Session session=HibernateUtil.getSession()) {
-            if(Objects.isNull(session)){
+    void selectExampleN1() {
+        try (Session session = HibernateUtil.getSession()) {
+            if (Objects.isNull(session)) {
                 throw new RuntimeException("Session is null");
             }
             session.beginTransaction();
-            Set<Pet> pets = session.find(Owner.class, 8).getPets();
-            pets.forEach(pet -> pet.getToys().remove(pet.getToys().stream().findAny().get()));
 
+            String hql = "SELECT ow FROM Owner ow ";
+            session.createQuery(hql, Owner.class)
+                    .getResultList()
+                    .forEach(entity -> System.out.println(entity));
             session.getTransaction().commit();
+        }
+    }
+
+    void setVsListExample(final Integer id) {
+        try (Session session = HibernateUtil.getSession()) {
+            if (Objects.isNull(session)) {
+                throw new RuntimeException("Session is null");
+            }
+            session.beginTransaction();
+            System.out.println("###BEFORE SET VS LIST");
+            List<Pet> pets=session.find(Owner.class,id).getPets();
+            pets.forEach(pet -> pet.getToys().remove(pet.getToys().stream().findAny().get()));
+            System.out.println("###AFTER SET VS LIST");
+            session.getTransaction().commit();
+        }
     }
 
 

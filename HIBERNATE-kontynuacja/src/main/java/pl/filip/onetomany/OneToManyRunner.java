@@ -7,8 +7,9 @@ import java.util.Set;
 public class OneToManyRunner {
     public static void main(String[] args) {
         OwnerRepository ownerRepository=new OwnerRepository();
-        PetRepository petRepository=new PetRepository();
-        ownerRepository.selectExampleN1();
+        ownerRepository.deleteAll();
+        int i = ownerRepository.saveTestData();
+        ownerRepository.setVsListExample(i);
 
 
 

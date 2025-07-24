@@ -3,6 +3,7 @@ package pl.filip.onetomany;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 @Entity
 @Builder
@@ -26,8 +27,8 @@ public class Toy {
         private String color;
 
 
-       /* @ManyToMany(mappedBy = "toys")
-    private Set<Pet> pet;*/
+        @ManyToMany(mappedBy = "toys")
+    private List<Pet> pet;
 
 
 
