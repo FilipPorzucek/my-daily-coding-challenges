@@ -2,9 +2,7 @@ package pl.filip.onetomany;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+
 
 import java.util.List;
 import java.util.Set;
@@ -14,9 +12,20 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode(of = "email")
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="owner")
+
+@NamedNativeQueries(
+        {
+                @NamedNativeQuery(
+                        name = "Owner.findAllNative",
+                        query = "SELECT * FROM Owner",
+                        resultClass = Owner.class
+                )
+        }
+)
 
 public class Owner  {
     @Id
@@ -34,7 +43,7 @@ public class Owner  {
 
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "owner", cascade = CascadeType.ALL)
     @OrderBy("breed ASC")
-    private List<Pet> pets;
+    private Set<Pet> pets;
 
     public void removePet(final Pet pet){
        pets.remove(pet);

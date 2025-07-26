@@ -27,8 +27,8 @@ public class Toy {
         private String color;
 
 
-        @ManyToMany(mappedBy = "toys")
-    private List<Pet> pet;
+      /*  @ManyToMany(mappedBy = "toys")
+    private List<Pet> pet;*/
 
 
 

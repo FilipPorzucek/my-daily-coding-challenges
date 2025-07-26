@@ -35,13 +35,13 @@ public class Pet {
     @JoinColumn(name = "owner_id")
     private Owner owner;
 
-    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    /*@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinTable(
             name="pet_toy",
             joinColumns={@JoinColumn(name = "pet_id")},
             inverseJoinColumns = {@JoinColumn(name = "toy_id")}
     )
     @Fetch(value = FetchMode.JOIN)
-    private List<Toy> toys;
+    private List<Toy> toys;*/
 
 }

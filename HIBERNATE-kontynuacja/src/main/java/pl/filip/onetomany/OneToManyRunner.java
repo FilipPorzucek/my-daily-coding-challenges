@@ -2,23 +2,34 @@ package pl.filip.onetomany;
 
 import pl.filip.HibernateUtil;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
+
+import static pl.filip.onetomany.ExampleData.*;
 
 public class OneToManyRunner {
     public static void main(String[] args) {
         OwnerRepository ownerRepository=new OwnerRepository();
         ownerRepository.deleteAll();
-        int i = ownerRepository.saveTestData();
-        ownerRepository.setVsListExample(i);
+        Owner owner = ownerRepository.insertData(someOwner(), Set.of(somePet1(), somePet2()));
+        Owner owner1 = ownerRepository.insertData(someOwner2(), Set.of(somePet3(), somePet4()));
+
+        ownerRepository.nativeQueryExample();
 
 
+
+
+
+
+        HibernateUtil.closeSessionFactory();
 
 //
 //        ownerRepository.deleteAll();
 //
 //     ownerRepository.selectExample5().forEach(entity-> System.out.println(entity));
 
-        HibernateUtil.closeSessionFactory();
+
 //
 //        ownerRepository.listOwners()
 //                .forEach(owner -> System.out.println("###ONWER listing "+owner));

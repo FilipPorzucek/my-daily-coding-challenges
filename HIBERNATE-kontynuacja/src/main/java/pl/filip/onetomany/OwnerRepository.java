@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 import org.hibernate.Session;
+import org.hibernate.query.NativeQuery;
 import pl.filip.HibernateUtil;
 
 import java.util.*;
@@ -18,7 +19,7 @@ public class OwnerRepository {
             }
             System.out.println("###BEFORET INSERT\n---------------------------------------------------");
             session.beginTransaction();
-            owner.setPets(new ArrayList<>(pets));
+            owner.setPets(pets);
             pets.forEach(pet -> pet.setOwner(owner));
             session.persist(owner);
             pets.forEach(session::persist);
@@ -327,7 +328,7 @@ public class OwnerRepository {
         }
     }
 
-    int saveTestData(){
+ /*   int saveTestData(){
         try (Session session=HibernateUtil.getSession()){
             if(Objects.isNull(session)){
                 throw new RuntimeException("Session is null");
@@ -368,7 +369,7 @@ public class OwnerRepository {
         return owner1.getId();
         }
     }
-
+*/
     void selectExample8() {
         try (Session session = HibernateUtil.getSession()) {
             if (Objects.isNull(session)) {
@@ -421,7 +422,7 @@ public class OwnerRepository {
         }
     }
 
-    void setVsListExample(final Integer id) {
+/*    void setVsListExample(final Integer id) {
         try (Session session = HibernateUtil.getSession()) {
             if (Objects.isNull(session)) {
                 throw new RuntimeException("Session is null");
@@ -431,6 +432,21 @@ public class OwnerRepository {
             List<Pet> pets=session.find(Owner.class,id).getPets();
             pets.forEach(pet -> pet.getToys().remove(pet.getToys().stream().findAny().get()));
             System.out.println("###AFTER SET VS LIST");
+            session.getTransaction().commit();
+        }
+    }*/
+
+
+   void nativeQueryExample() {
+        try (Session session = HibernateUtil.getSession()) {
+            if (Objects.isNull(session)) {
+                throw new RuntimeException("Session is null");
+            }
+            session.beginTransaction();
+            String sql="SELECT * FROM Owner";
+            NativeQuery<Owner> nativeQuery = session.getNamedNativeQuery("Owner.findAllNative");
+            List<Owner> owner = nativeQuery.list();
+            owner.forEach(owner1 -> System.out.println(owner1));
             session.getTransaction().commit();
         }
     }
