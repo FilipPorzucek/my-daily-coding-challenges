@@ -1,14 +1,13 @@
 package pl.filip;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
 @Entity
 @Builder
+@ToString(exclude = "address")
+@EqualsAndHashCode(of="email")
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="customer")
@@ -30,7 +29,7 @@ public class Customer {
     @Column(name = "email")
     private String email;
 
-    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id",unique = true)
     private Address address;
 

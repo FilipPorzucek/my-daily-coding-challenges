@@ -16,7 +16,7 @@ public class HibernateUtil {
             Map.entry(Environment.DRIVER,"org.postgresql.Driver"),
         Map.entry(Environment.URL, "jdbc:postgresql://localhost:5432/crud"),
         Map.entry(Environment.USER,"postgres"),
-        Map.entry(Environment.PASS,"brasil9"),
+        Map.entry(Environment.PASS,"1234"),
         Map.entry(Environment.DIALECT,"org.hibernate.dialect.PostgreSQLDialect"),
         Map.entry(Environment.HBM2DDL_AUTO,"update"),
         Map.entry(Environment.SHOW_SQL,"true"),

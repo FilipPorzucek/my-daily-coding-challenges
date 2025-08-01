@@ -9,8 +9,15 @@ public class ExampleRunner {
         Customer customer1 =  customerRepository.insertCustomer(ExampleData.someCustomer1());
         Customer customer2=customerRepository.insertCustomer(ExampleData.someCustomer2());
 
+        customerRepository.criteriaExample();
 
-        customerRepository.listCustomers()
+
+
+        HibernateUtil.closeSessionFactory();
+
+
+
+        /*customerRepository.listCustomers()
                 .forEach(customer -> System.out.println("Customer list: "+customer));
 
         System.out.println("Customer1"+customerRepository.getCustomer(customer1.getId()));
@@ -23,8 +30,8 @@ public class ExampleRunner {
 
         customerRepository.listCustomers()
 .forEach(customer -> System.out.println("Customer lisyt"+customer));
+*/
 
-        HibernateUtil.closeSessionFactory();
 
 
 
