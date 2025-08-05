@@ -8,17 +8,16 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Environment;
 
 import org.hibernate.service.ServiceRegistry;
-import pl.filip.manyToMany.Employee;
+import pl.filip.cache.CachedEmployee;
 import pl.filip.manyToMany.Project;
 import pl.filip.onetomany.Owner;
 import pl.filip.onetomany.Pet;
 import pl.filip.onetomany.Toy;
 
 import java.util.Map;
-import java.util.Objects;
 
 public class HibernateUtil {
-    private static final Map<String, Object> SETTINGS=Map.ofEntries(
+    private static final Map<String, Object> HIBERNATE_SETTINGS=Map.ofEntries(
             Map.entry(Environment.DRIVER,"org.postgresql.Driver"),
             Map.entry(Environment.URL, "jdbc:postgresql://localhost:5432/pet"),
             Map.entry(Environment.USER,"postgres"),
@@ -29,19 +28,28 @@ public class HibernateUtil {
             Map.entry(Environment.FORMAT_SQL ,"true")
     );
 
+    private static final Map<String, Object> HIKARI_CP_SETTINGS=Map.ofEntries(
+            Map.entry("hibernate.hikari.connectionTimeout","20000"),
+            Map.entry("hibernate.hikari.minimumIdle","10"),
+            Map.entry("hibernate.hikari.maximumPoolSize","20"),
+            Map.entry("hibernate.hikari.idleTimeout","300000")
+    );
+
     private static SessionFactory sessionFactory=loadSessionFactory();
 
     private static SessionFactory loadSessionFactory() {
         try{
             ServiceRegistry serviceRegistry= (ServiceRegistry) new StandardServiceRegistryBuilder()
-                    .applySettings(SETTINGS)
+                    .applySettings(HIBERNATE_SETTINGS)
+                    .applySettings(HIKARI_CP_SETTINGS)
                     .build();
 
             Metadata metadata=new MetadataSources(serviceRegistry)
                     .addAnnotatedClass(Pet.class)
                     .addAnnotatedClass(Owner.class)
                     .addAnnotatedClass(Toy.class)
-                    .addAnnotatedClass(Employee.class)
+                    .addAnnotatedClass(pl.filip.manyToMany.Employee.class)
+                    .addAnnotatedClass(CachedEmployee.class)
                     .addAnnotatedClass(Project.class)
                     .getMetadataBuilder()
                     .build();
