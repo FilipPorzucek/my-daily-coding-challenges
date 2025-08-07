@@ -8,6 +8,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Environment;
 
 import org.hibernate.service.ServiceRegistry;
+import org.hibernate.stat.Statistics;
 import pl.filip.cache.CachedEmployee;
 import pl.filip.manyToMany.Project;
 import pl.filip.onetomany.Owner;
@@ -23,16 +24,18 @@ public class HibernateUtil {
             Map.entry(Environment.USER,"postgres"),
             Map.entry(Environment.PASS,"1234"),
             Map.entry(Environment.DIALECT,"org.hibernate.dialect.PostgreSQLDialect"),
+            Map.entry(Environment.GENERATE_STATISTICS,true),
             Map.entry(Environment.HBM2DDL_AUTO,"update"),
             Map.entry(Environment.SHOW_SQL,"true"),
             Map.entry(Environment.FORMAT_SQL ,"true")
     );
 
-    private static final Map<String, Object> HIKARI_CP_SETTINGS=Map.ofEntries(
-            Map.entry("hibernate.hikari.connectionTimeout","20000"),
-            Map.entry("hibernate.hikari.minimumIdle","10"),
-            Map.entry("hibernate.hikari.maximumPoolSize","20"),
-            Map.entry("hibernate.hikari.idleTimeout","300000")
+    private static final Map<String, Object> CACHE_SETTINGS = Map.ofEntries(
+            Map.entry(Environment.CACHE_REGION_FACTORY, "org.hibernate.cache.jcache.JCacheRegionFactory"),
+            Map.entry("hibernate.javax.cache.provider", "org.ehcache.jsr107.EhcacheCachingProvider"),
+            Map.entry("hibernate.javax.cache.uri", "classpath:META-INF/ehcache.xml"),
+            Map.entry(Environment.USE_SECOND_LEVEL_CACHE, "true"),
+            Map.entry(Environment.GENERATE_STATISTICS, "true")
     );
 
     private static SessionFactory sessionFactory=loadSessionFactory();
@@ -41,7 +44,7 @@ public class HibernateUtil {
         try{
             ServiceRegistry serviceRegistry= (ServiceRegistry) new StandardServiceRegistryBuilder()
                     .applySettings(HIBERNATE_SETTINGS)
-                    .applySettings(HIKARI_CP_SETTINGS)
+                    .applySettings(CACHE_SETTINGS)
                     .build();
 
             Metadata metadata=new MetadataSources(serviceRegistry)
@@ -75,5 +78,9 @@ public class HibernateUtil {
             System.err.println("Exception while opening session"+e);
         }
         return null;
+    }
+
+    public static Statistics getStatistics() {
+        return sessionFactory.getStatistics();
     }
 }

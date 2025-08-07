@@ -1,9 +1,11 @@
 package pl.filip.cache;
 
 import org.hibernate.Session;
+import org.hibernate.stat.Statistics;
 import pl.filip.HibernateUtil;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class EmployeeRepository {
 
@@ -58,13 +60,34 @@ public class EmployeeRepository {
             session.clear();
 
             CachedEmployee e5 = session.find(CachedEmployee.class, employeeId);
-            System.out.printf("####E1 %s %s%n", e5.getName(), e5.getSurname());
+            System.out.printf("####E1 %s %s%n", e5.getName(), e5 .getSurname());
 
 
             session.getTransaction().commit();
 
         }
+    }
+
+    Optional<CachedEmployee> l2c(int employeeId){
+        try (Session session=HibernateUtil.getSession()) {
+            if (Objects.isNull(session)) {
+                throw new RuntimeException("Session is null");
+            }
+            session.beginTransaction();
+            CachedEmployee e1 = session.find(CachedEmployee.class, employeeId);
+            System.out.printf("####E1 %s %s%n", e1.getName(), e1.getSurname());
+            stats(HibernateUtil.getStatistics());
+
+            session.getTransaction().commit();
+            return Optional.of(e1);
+        }
 
 
+    }
+
+    private void stats(Statistics statistics) {
+        System.out.println("Misses in second level cache"+statistics.getSecondLevelCacheMissCount());
+        System.out.println("Added to 2 Lc"+statistics.getSecondLevelCacheMissCount());
+        System.out.println("Found in 2 Lc"+statistics.getSecondLevelCacheHitCount());
     }
 }
