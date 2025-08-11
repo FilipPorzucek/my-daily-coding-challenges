@@ -3,6 +3,7 @@ eventId SERIAL not null,
 eventName VARCHAR(32) not null,
 dateTime TIMESTAMP WITH TIME ZONE not null,
 capacity INT not null,
+version INT not null,
 PRIMARY KEY(event_id),
 UNIQUE(eventName)
 );
